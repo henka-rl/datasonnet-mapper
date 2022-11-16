@@ -1,5 +1,8 @@
 package com.datasonnet.modules;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.Option;
+
 /*-
  * Copyright 2019-2020 the original author or authors.
  *
@@ -18,8 +21,12 @@ package com.datasonnet.modules;
 
 public class JsonPath {
 
+	static Configuration config = Configuration.defaultConfiguration()
+                .addOptions(Option.SUPPRESS_EXCEPTIONS, Option.DEFAULT_PATH_LEAF_TO_NULL);
+
+
     public static String select(String json, String path) {
-        String selected = com.jayway.jsonpath.JsonPath.read(json, path).toString();
+        String selected = com.jayway.jsonpath.JsonPath.using(config).parse(json).read(path).toString();
         return selected;
-    }
+}
 }

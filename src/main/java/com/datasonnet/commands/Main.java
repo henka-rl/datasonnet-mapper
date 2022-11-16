@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
+
 @CommandLine.Command(
         subcommands = {
                 Run.class,
@@ -41,6 +43,7 @@ public class Main implements Runnable {
     }
 
     static String readFile(File file) throws IOException {
-        return Files.lines(file.toPath()).collect(Collectors.joining());
+    	return FileUtils.readFileToString(file, "UTF-8");
+        //return Files.lines(file.toPath()).collect(Collectors.joining());
     }
 }

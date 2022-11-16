@@ -83,7 +83,7 @@ public class Run implements Callable<Void> {
     }
 
     private String suffix(File file) {
-        String[] parts = file.getName().split(".");
+        String[] parts = file.getName().split("\\.");
         if (parts.length > 1) {
             return parts[parts.length - 1];
         } else {

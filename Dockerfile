@@ -26,5 +26,5 @@ RUN addgroup datasonnet && \
 USER datasonnet
 WORKDIR /var/cache/datasonnet
 
-ARG JAR_FILE
+ARG JAR_FILE=target/datasonnet-mapper-2.1.5-DALGO-jar-with-dependencies.jar
 COPY ${JAR_FILE} /opt/datasonnet/app.jar

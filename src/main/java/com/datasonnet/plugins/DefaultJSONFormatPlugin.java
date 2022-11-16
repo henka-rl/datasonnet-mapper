@@ -28,11 +28,15 @@ import ujson.Value;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+
+import org.apache.commons.io.IOUtils;
 
 public class DefaultJSONFormatPlugin extends AbstractDataFormatPlugin {
     public DefaultJSONFormatPlugin() {
@@ -47,6 +51,7 @@ public class DefaultJSONFormatPlugin extends AbstractDataFormatPlugin {
         readerSupportedClasses.add(java.io.File.class);
         readerSupportedClasses.add(java.nio.ByteBuffer.class);
         readerSupportedClasses.add(byte[].class);
+        readerSupportedClasses.add(java.io.InputStream.class);
 
         writerSupportedClasses.add(java.lang.String.class);
         writerSupportedClasses.add(java.lang.CharSequence.class);
@@ -85,6 +90,14 @@ public class DefaultJSONFormatPlugin extends AbstractDataFormatPlugin {
 
         if (byte[].class.isAssignableFrom(targetType)) {
             return ujsonUtils.read(ujson.Readable.fromByteArray((byte[]) doc.getContent()), false);
+        }
+        
+        if (InputStream.class.isAssignableFrom(targetType)) {
+        	try (InputStream is = ((InputStream) doc.getContent())) {
+        		return ujsonUtils.read(ujson.Readable.fromByteArray(IOUtils.toByteArray(is)), false);
+        	} catch(IOException e) {
+        		throw new PluginException(e);
+        	}
         }
 
         throw new PluginException(new IllegalArgumentException("Unsupported document content class, use the test method canRead before invoking read"));
